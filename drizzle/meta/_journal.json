@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1719830387007,
+      "tag": "0000_flashy_squadron_supreme",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1719835010744,
+      "tag": "0001_fast_firebird",
+      "breakpoints": true
+    }
+  ]
+}
