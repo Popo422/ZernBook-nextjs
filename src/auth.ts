@@ -5,6 +5,7 @@ import { db } from "@/db/drizzle/db";
 import { users } from "@/db/drizzle/schema/users";
 import { eq } from "drizzle-orm";
 import Credentials from "next-auth/providers/credentials";
+import google from "next-auth/providers/google";
 
 type User = {
   email: string;
@@ -40,10 +41,42 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return { id: userExists.id, email: userExists.email };
       },
     }),
+    google,
   ],
   callbacks: {
+    async signIn({ account, profile }) {
+      if (account?.provider === "google") {
+        const existingusers = await db
+          .select()
+          .from(users)
+          .where(eq(users.email, profile?.email));
+        if (!existingusers || existingusers.length === 0) {
+          await db.insert(users).values({
+            email: (profile && profile.email) || "",
+            name: profile?.name,
+            image: profile?.picture,
+          });
+        }
+        return true;
+      }
+      return true;
+    },
     async jwt({ token, user, session }) {
-      return { ...token, ...user };
+      if (user) {
+        const dbUser = await db
+          .select()
+          .from(users)
+          .where(eq(users.email, user.email));
+
+        token.id = dbUser[0].id;
+      }
+      return { ...token, ...session };
+    },
+    async session({ session, token }) {
+      session.user.id  = token && token.id ;
+      // Add other fields as necessary
+      session.user.role = token.role;
+      return session;
     },
   },
 });

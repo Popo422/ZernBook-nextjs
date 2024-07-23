@@ -1,11 +1,42 @@
-import { signOut } from "@/auth";
-import { BiMenu, BiUser } from "react-icons/bi";
+"use client";
+import { signOut, useSession } from "next-auth/react";
+import { BiArrowBack, BiMenu, BiUser } from "react-icons/bi";
+import User from "./User";
+import { redirect, useRouter } from "next/navigation";
 
-const Header = () => {
+const Header = ({ page }: { page: string }) => {
+  const session = useSession();
+  const { data: sessionData } = session;
+  const router = useRouter();
+
   return (
     <div className="w-full bg-base-100 flex justify-between p-4 items-center">
-      <BiUser size={22} />
-      <span>ZernBook</span>
+      {sessionData ? (
+        page !== "home" ? (
+          <button className="btn " onClick={() => router.push("/home")}>
+            {" "}
+            <BiArrowBack />
+          </button>
+        ) : (
+          <button
+            className="hover:bg-base-300"
+            onClick={() => router.push(`/${sessionData?.user?.id}`)}
+          >
+            <User session={sessionData} />
+          </button>
+        )
+      ) : (
+        <button
+          type="submit"
+          className=" btn btn-neutral"
+          onClick={() => {
+            redirect("/login");
+          }}
+        >
+          Sign In
+        </button>
+      )}
+      <span>Crud App</span>
       <div className="dropdown dropdown-end">
         <div tabIndex={0} role="button" className="btn m-1">
           <BiMenu size={22} />
@@ -15,17 +46,15 @@ const Header = () => {
           className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
         >
           <li>
-            <form
-              className="w-full flex"
-              action={async () => {
-                "use server";
-                await signOut({ redirectTo: "/login" });
+            <button
+              type="submit"
+              className="w-full btn btn-neutral"
+              onClick={async () => {
+                signOut({ callbackUrl: "/login" });
               }}
             >
-              <button type="submit" className="w-full btn btn-neutral">
-                Sign Out
-              </button>
-            </form>
+              Sign Out
+            </button>
           </li>
         </ul>
       </div>
