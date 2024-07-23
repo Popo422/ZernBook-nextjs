@@ -36,7 +36,9 @@ const Header = ({ page }: { page: string }) => {
           Sign In
         </button>
       )}
-      <span>Crud App</span>
+      <h1 className="text-3xl">
+        <span className="font-bold text-primary ">Zern</span>Book
+      </h1>
       <div className="dropdown dropdown-end">
         <div tabIndex={0} role="button" className="btn m-1">
           <BiMenu size={22} />
