@@ -46,7 +46,7 @@ export async function GET(
       posts: allPosts,
       message: "Fetched all posts",
     });
-  } catch (e) {
+  } catch (e : Error | any) {
     console.error(e);
     return NextResponse.json({
       success: false,
