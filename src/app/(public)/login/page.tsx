@@ -39,7 +39,7 @@ const Login = () => {
 
   return (
     <div className="bg-base-200 w-full h-full flex flex-col">
-      <Header />
+      <Header page="login"/>
 
       <div className="w-full h-full items-center justify-center flex flex-col">
         {loading && (
