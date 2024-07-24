@@ -10,7 +10,7 @@ const User = ({ params }: { params: { id: string } }) => {
   const [posts, setPosts] = useState([]);
   const { id } = params;
 
-  const fetchUserPosts = async (userId: string) => {
+  const fetchUserPosts = async (userId: string | undefined) => {
     try {
       const res = await fetch(`/api/post/${userId}`, {
         method: "GET",

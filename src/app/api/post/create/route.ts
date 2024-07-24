@@ -21,7 +21,7 @@ export async function POST(request: Request) {
       post,
       message: "Post created successfully",
     });
-  } catch (e) {
+  } catch (e : Error | any) {
     console.error(e);
     NextResponse.json({
       success: false,

@@ -5,7 +5,7 @@ import { BiCheck, BiEdit, BiImageAdd, BiUpload, BiX } from "react-icons/bi";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
-const UserPost = ({ fetchPosts }) => {
+const UserPost = ({ fetchPosts } : { fetchPosts: (userId: string | undefined) => Promise<void> }) => {
   const userId = useSession().data?.user?.id;
   type PostType = {
     title: string;
@@ -216,8 +216,8 @@ const UserPost = ({ fetchPosts }) => {
                   onClick={async () => {
                     try {
                       const res = await createPost(post);
-                      fetchPosts();
                       modalRef.current && modalRef.current.close();
+                      fetchPosts(userId)
                     } catch (err) {
                       console.log({ err });
                     }

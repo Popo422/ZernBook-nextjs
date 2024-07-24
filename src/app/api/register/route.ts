@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       password: hashedPassword,
     });
     return NextResponse.json({ email, password });
-  } catch (e) {
+  } catch (e: Error | any) {
     console.log({ e });
   }
 }
