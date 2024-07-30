@@ -101,7 +101,7 @@ const Header = ({ page }: { page: string }) => {
       </h1>
       <div className="flex gap-10">
         <div className="dropdown dropdown-end">
-          <div tabIndex={0} role="button" className="btn m-1 relative">
+          <div tabIndex={0} role="button" className="btn m-1 relative" onClick={() => fetchFriendRequests(userId)}>
             <BiBell size={22} />
             {friendRequest && friendRequest.length > 0 && (
               <div className="badge badge-primary absolute right-0 top-0">
