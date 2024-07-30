@@ -5,7 +5,11 @@ import { BiCheck, BiEdit, BiImageAdd, BiUpload, BiX } from "react-icons/bi";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
-const UserPost = ({ fetchPosts } : { fetchPosts: (userId: string | undefined) => Promise<void> }) => {
+const UserPost = ({
+  fetchPosts,
+}: {
+  fetchPosts: (userId: string | undefined) => Promise<void>;
+}) => {
   const userId = useSession().data?.user?.id;
   type PostType = {
     title: string;
@@ -172,7 +176,7 @@ const UserPost = ({ fetchPosts } : { fetchPosts: (userId: string | undefined) =>
               {uploadImage && !uploading && (
                 <div className="w-full flex flex-col p-2 outline rounded-lg">
                   {/* Upload Area */}
-                  <div className="flex w-full h-full bg-gray-500 rounded-lg">
+                  <div className="flex w-full h-full bg-gray-500 rounded-lg relative">
                     <input
                       className="input w-full h-full hidden"
                       type="file"
@@ -205,6 +209,16 @@ const UserPost = ({ fetchPosts } : { fetchPosts: (userId: string | undefined) =>
                         <BiUpload />
                       </button>
                     )}
+                    {uploadImage && (
+                      <button
+                        className="btn btn-primary btn-sm absolute top-0 right-0"
+                        onClick={() => {
+                          setUploadImage(false);
+                        }}
+                      >
+                        <BiX size={10} />
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
@@ -217,7 +231,7 @@ const UserPost = ({ fetchPosts } : { fetchPosts: (userId: string | undefined) =>
                     try {
                       const res = await createPost(post);
                       modalRef.current && modalRef.current.close();
-                      fetchPosts(userId)
+                      fetchPosts(userId);
                     } catch (err) {
                       console.log({ err });
                     }
@@ -226,7 +240,7 @@ const UserPost = ({ fetchPosts } : { fetchPosts: (userId: string | undefined) =>
                   Post
                 </button>
               </div>
-              <div className="flex w-full p-3 justify-between">
+              <div className="flex w-full p-3 justify-between relative">
                 <button
                   className="btn  btn-circle btn-sm "
                   onClick={() => {
