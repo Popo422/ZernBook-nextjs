@@ -20,7 +20,7 @@ const UserNav = ({ profile, currentMenu, setCurrentMenu, friendsNo }: any) => {
             <div className="w-fit p-2 rounded-full relative avatar bg-base-300">
               {" "}
               <div className=" rounded-full  h-40 w-40 flex items-center justify-center">
-                <img src={session?.data?.user?.image} />
+                <img src={session?.data?.user?.image || "https://picsum.photos/2000/300"} />
               </div>
               <div className=" absolute z-10  bottom-0 right-0">
                 <div className="w-10 h-10 rounded-full flex items-center justify-center border">
