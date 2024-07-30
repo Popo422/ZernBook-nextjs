@@ -16,7 +16,7 @@ const Home = () => {
     <div className="w-full h-full overflow-auto">
       <Header page="home" />
       <div className="flex w-full md:w-full pt-20 justify-center gap-20">
-        <div className="flex flex-col gap-5 md:w-[600px] w-[400px]">
+        <div className="flex flex-col gap-5 md:w-[500px] w-[300px]">
           <HomePosts />
         </div>
       </div>

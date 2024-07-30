@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/db/drizzle/db";
 import { posts } from "@/db/drizzle/schema/posts";
 import { users } from "@/db/drizzle/schema/users";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 export async function GET(request: Request) {
   try {
@@ -10,7 +10,8 @@ export async function GET(request: Request) {
     const fetchPosts = await db
       .select()
       .from(posts)
-      .innerJoin(users, eq(posts.userId, users.id));
+      .innerJoin(users, eq(posts.userId, users.id))
+      .orderBy(desc(posts.createdAt));
 
     // Fetch image URLs concurrently
     const allPosts = await Promise.all(
@@ -24,6 +25,7 @@ export async function GET(request: Request) {
             headers: {
               "Content-Type": "application/json",
             },
+            cache: "no-store",
           }
         );
         const { url } = await fetchImage.json();
@@ -42,7 +44,7 @@ export async function GET(request: Request) {
       posts: allPosts,
       message: "Fetched all posts",
     });
-  } catch (e : Error | any) {
+  } catch (e: Error | any) {
     return NextResponse.json({
       success: false,
       message: "Something went wrong: " + e.message,

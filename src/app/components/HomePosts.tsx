@@ -5,12 +5,17 @@ import UserPost from "./UserPost";
 
 const HomePosts = () => {
   const [posts, setPosts] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const fetchPosts = async () => {
     try {
-      console.log("fetching posts");
+      setLoading(true);
       const response = await fetch("/api/post");
       const data = await response.json();
-      setPosts(data.posts);
+      if (data.success) {
+        setLoading(false);
+        setPosts(data.posts);
+      }
+      setLoading(false);
     } catch (err) {
       console.log(err);
     }

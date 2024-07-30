@@ -16,11 +16,11 @@ export async function POST(request: Request) {
       userId,
     });
 
-    return NextResponse.json({
-      success: true,
-      post,
-      message: "Post created successfully",
-    });
+    // return NextResponse.json({
+    //   success: true,
+    //   post,
+    //   message: "Post created successfully",
+    // });
   } catch (e : Error | any) {
     console.error(e);
     NextResponse.json({

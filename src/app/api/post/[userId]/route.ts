@@ -28,6 +28,7 @@ export async function GET(
             headers: {
               "Content-Type": "application/json",
             },
+            cache: "no-store",  
           }
         );
         const { url } = await fetchImage.json();
@@ -46,7 +47,7 @@ export async function GET(
       posts: allPosts,
       message: "Fetched all posts",
     });
-  } catch (e : Error | any) {
+  } catch (e: Error | any) {
     console.error(e);
     return NextResponse.json({
       success: false,

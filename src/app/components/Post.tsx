@@ -1,10 +1,15 @@
 "use client";
 
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
-import { BiTrash, BiUser, BiX } from "react-icons/bi";
+import { useEffect, useRef, useState } from "react";
+import { BiMenu, BiTrash, BiUser, BiX } from "react-icons/bi";
 
 const Post = ({ post, fetchPosts }: { post: any; fetchPosts: any }) => {
+  const session = useSession();
+  const [imageLoading, setImageLoading] = useState<boolean>(true);
+  const [isFriendAdded, setIsFriendAdded] = useState<boolean>(false);
   const router = useRouter();
   const deleteModal = useRef<HTMLDialogElement | null>(null);
   const { user, posts } = post;
@@ -30,6 +35,57 @@ const Post = ({ post, fetchPosts }: { post: any; fetchPosts: any }) => {
       console.log(err);
     }
   };
+
+  const addUser = async () => {
+    try {
+      const userId = session.data?.user?.id;
+      const friendId = user?.id;
+      const res = await fetch("/api/user/addUser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          friendId,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setIsFriendAdded(true);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const checkIfFriendIsAdded = async (friendId: string, userId: string) => {
+    try {
+      const res = await fetch("/api/user/checkFriendRequestAdded", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          friendId,
+        }),
+      });
+      const { friendRequest }: { friendRequest: [] } = await res.json();
+      if (friendRequest && friendRequest.length > 0) {
+        setIsFriendAdded(true);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    if (session.status === "authenticated") {
+      const userId = session.data?.user?.id || "";
+      const friendId = user?.id || "";
+      checkIfFriendIsAdded(friendId, userId);
+    }
+  }, [session]);
+
   return (
     <li
       className="card bg-base-100 w-full min-h-48 shadow-xl "
@@ -62,19 +118,51 @@ const Post = ({ post, fetchPosts }: { post: any; fetchPosts: any }) => {
             }}
           >
             {user && user.image ? (
-              <img src={user?.image} />
+              <>
+                <img src={user?.image} />
+                {imageLoading && <div className="skeleton h-32 w-full"></div>}
+              </>
             ) : (
               <BiUser size={22} />
             )}
           </div>
           <span className="text-sm">{user?.name}</span>
         </div>
-        <button
-          className="btn btn-sm btn-circle btn-secondary"
-          onClick={() => deleteModal.current && deleteModal.current.showModal()}
-        >
-          <BiTrash size={20} />
-        </button>
+
+        <div className="dropdown dropdown-end">
+          <div tabIndex={0} role="button" className="btn m-1">
+            <BiMenu size={22} />
+          </div>
+          <ul
+            tabIndex={0}
+            className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-5 bg-black"
+          >
+            {session?.data?.user?.id !== user?.id && !isFriendAdded && (
+              <li>
+                <button
+                  type="submit"
+                  className="w-full btn btn-neutral btn-xs"
+                  onClick={() => {
+                    addUser();
+                  }}
+                >
+                  Add User
+                </button>
+              </li>
+            )}
+            <li>
+              <button
+                type="submit"
+                className="w-full btn btn-neutral btn-xs"
+                onClick={async () => {
+                  deleteModal?.current?.showModal();
+                }}
+              >
+                Delete post
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div className="card-body">
@@ -82,7 +170,16 @@ const Post = ({ post, fetchPosts }: { post: any; fetchPosts: any }) => {
         <p>{posts?.content}</p>
         {posts?.image && (
           <div className="flex justify-center p-2 border rounded-md border-dotted">
-            <img src={posts?.image} className="w-[300px]" />
+            {imageLoading && <div className="skeleton h-32 w-full"></div>}
+            <img
+              src={posts?.image}
+              className={`w-[300px] ${imageLoading ? "hidden" : ""}`}
+              onLoad={(e) => {
+                if (e.currentTarget) {
+                  setImageLoading(false);
+                }
+              }}
+            />
           </div>
         )}
       </div>
