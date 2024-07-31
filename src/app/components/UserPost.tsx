@@ -55,6 +55,9 @@ const UserPost = ({
         },
         body: JSON.stringify(data),
       });
+      if (res.status !== 200) {
+        throw new Error("Failed to upload image");
+      }
       const result = await res.json();
       result &&
         setPost((prev) => ({
@@ -176,7 +179,7 @@ const UserPost = ({
               {uploadImage && !uploading && (
                 <div className="w-full flex flex-col p-2 outline rounded-lg">
                   {/* Upload Area */}
-                  <div className="flex w-full h-full bg-gray-500 rounded-lg relative">
+                  <div className="flex w-full h-full bg-base-300 rounded-lg relative">
                     <input
                       className="input w-full h-full hidden"
                       type="file"

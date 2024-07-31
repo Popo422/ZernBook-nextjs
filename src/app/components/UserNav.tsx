@@ -4,7 +4,8 @@ import { useState } from "react";
 import { BiCamera, BiUser } from "react-icons/bi";
 
 const UserNav = ({ profile, currentMenu, setCurrentMenu, friendsNo }: any) => {
-  const { coverPhoto, name, image } = profile;
+  const { coverPhoto, name, profileImage } = profile;
+  console.log(profile);
   const session = useSession();
   return (
     <div className="w-full flex flex-col gap-1 justify-center">
@@ -20,15 +21,10 @@ const UserNav = ({ profile, currentMenu, setCurrentMenu, friendsNo }: any) => {
             <div className="w-fit p-2 rounded-full relative avatar bg-base-300">
               {" "}
               <div className=" rounded-full  md:h-40 md:w-40 flex items-center justify-center h-20 w-20">
-                <img
-                  src={
-                    session?.data?.user?.image ||
-                    "https://picsum.photos/2000/300"
-                  }
-                />
+                <img src={profileImage || ""} />
               </div>
               <div className=" absolute z-10  bottom-0 right-0">
-                <div className="h-7 w-7 md:w-10 md:h-10 rounded-full flex items-center justify-center border">
+                <div className="h-7 w-7 md:w-10 md:h-10 rounded-full flex items-center justify-center border button border-base-content">
                   <BiCamera />
                 </div>
               </div>

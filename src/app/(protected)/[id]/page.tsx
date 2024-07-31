@@ -14,6 +14,7 @@ const User = ({ params }: { params: { id: string } }) => {
   const [posts, setPosts] = useState<[any]>([{}]);
   const [friends, setFriends] = useState<any>([]);
   const [currentMenu, setCurrentMenu] = useState<string>("posts");
+  const [profile, setProfile] = useState({});
   const { id } = params;
 
   const fetchUserPosts = async (userId: string | undefined) => {
@@ -31,6 +32,20 @@ const User = ({ params }: { params: { id: string } }) => {
     }
   };
 
+  const fetchUser = async (userId: string) => {
+    try {
+      const res = await fetch(`api/user/${userId}`, {
+        method: "GET",
+        cache: "no-store",
+      });
+      const user = await res.json();
+      if (user) {
+        setProfile((prev: any) => ({ ...prev, profileImage: user?.image }));
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const fetchUserFriends = async (userId: string) => {
     try {
       const res = await fetch(`api/user/userFriends/${userId}`, {
@@ -49,13 +64,14 @@ const User = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     fetchUserPosts(id);
     fetchUserFriends(id);
+    fetchUser(id);
   }, [id]);
 
   return (
     <div className="w-full h-full overflow-auto">
       <Header page="user" />
       <UserNav
-        profile={""}
+        profile={profile}
         friendsNo={friends.length || 0}
         currentMenu={currentMenu}
         setCurrentMenu={setCurrentMenu}

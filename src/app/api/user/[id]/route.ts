@@ -6,17 +6,12 @@ import { eq } from "drizzle-orm";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { email: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
     //get queryString
-    const { email } = params;
-    console.log(email);
-    // validate email and password
-    const existingusers = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, email));
+    const { id } = params;
+    const existingusers = await db.select().from(users).where(eq(users.id, id));
     const user = existingusers[0];
     return NextResponse.json(user);
   } catch (e) {

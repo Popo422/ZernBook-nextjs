@@ -132,8 +132,10 @@ const Post = ({ post, fetchPosts }: { post: any; fetchPosts: any }) => {
           >
             {user && user.image ? (
               <>
-                <img src={user?.image} />
-                {imageLoading && <div className="skeleton h-32 w-full"></div>}
+                <img src={user?.image} className="rounded-full" />
+                {imageLoading && (
+                  <div className="skeleton h-10 w-10 rounded-full"></div>
+                )}
               </>
             ) : (
               <BiUser size={22} />
