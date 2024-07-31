@@ -73,7 +73,7 @@ const Post = ({ post, fetchPosts }: { post: any; fetchPosts: any }) => {
       const data = await res.json();
       const { friendStatus } = data;
       if (friendStatus) {
-        const isFriendAdded = friendStatus.filter((friend) => {
+        const isFriendAdded = friendStatus.filter((friend: any) => {
           const { status } = friend;
           if (status === "accepted" || status === "pending") {
             return true;
@@ -163,17 +163,19 @@ const Post = ({ post, fetchPosts }: { post: any; fetchPosts: any }) => {
                 </button>
               </li>
             )}
-           {session?.data?.user?.id === user?.id && <li>
-              <button
-                type="submit"
-                className="w-full btn btn-neutral btn-xs"
-                onClick={async () => {
-                  deleteModal?.current?.showModal();
-                }}
-              >
-                Delete post
-              </button>
-            </li>}
+            {session?.data?.user?.id === user?.id && (
+              <li>
+                <button
+                  type="submit"
+                  className="w-full btn btn-neutral btn-xs"
+                  onClick={async () => {
+                    deleteModal?.current?.showModal();
+                  }}
+                >
+                  Delete post
+                </button>
+              </li>
+            )}
           </ul>
         </div>
       </div>
