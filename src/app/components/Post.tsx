@@ -60,7 +60,7 @@ const Post = ({ post, fetchPosts }: { post: any; fetchPosts: any }) => {
   };
   const checkIfFriendIsAdded = async (friendId: string, userId: string) => {
     try {
-      const res = await fetch("/api/user/checkFriendRequestAdded", {
+      const res = await fetch("/api/user/checkStatus", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -70,10 +70,21 @@ const Post = ({ post, fetchPosts }: { post: any; fetchPosts: any }) => {
           friendId,
         }),
       });
-      const { friendRequest }: { friendRequest: [] } = await res.json();
-      if (friendRequest && friendRequest.length > 0) {
-        setIsFriendAdded(true);
+      const data = await res.json();
+      const { friendStatus } = data;
+      if (friendStatus) {
+        const isFriendAdded = friendStatus.filter((friend) => {
+          const { status } = friend;
+          if (status === "accepted" || status === "pending") {
+            return true;
+          }
+          return false;
+        });
+        if (isFriendAdded.length > 0) {
+          setIsFriendAdded(true);
+        }
       }
+      console.log(data);
     } catch (err) {
       console.log(err);
     }
@@ -82,7 +93,9 @@ const Post = ({ post, fetchPosts }: { post: any; fetchPosts: any }) => {
     if (session.status === "authenticated") {
       const userId = session.data?.user?.id || "";
       const friendId = user?.id || "";
-      checkIfFriendIsAdded(friendId, userId);
+      if (userId !== friendId) {
+        checkIfFriendIsAdded(friendId, userId);
+      }
     }
   }, [session]);
 
@@ -150,7 +163,7 @@ const Post = ({ post, fetchPosts }: { post: any; fetchPosts: any }) => {
                 </button>
               </li>
             )}
-            <li>
+           {session?.data?.user?.id === user?.id && <li>
               <button
                 type="submit"
                 className="w-full btn btn-neutral btn-xs"
@@ -160,7 +173,7 @@ const Post = ({ post, fetchPosts }: { post: any; fetchPosts: any }) => {
               >
                 Delete post
               </button>
-            </li>
+            </li>}
           </ul>
         </div>
       </div>

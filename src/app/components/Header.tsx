@@ -99,82 +99,91 @@ const Header = ({ page }: { page: string }) => {
       <h1 className="text-3xl">
         <span className="font-bold text-primary ">Zern</span>Book
       </h1>
-      <div className="flex gap-10">
-        <div className="dropdown dropdown-end">
-          <div tabIndex={0} role="button" className="btn m-1 relative" onClick={() => fetchFriendRequests(userId)}>
-            <BiBell size={22} />
+      {session.status === "authenticated" ? (
+        <div className="flex gap-10">
+          <div className="dropdown dropdown-end">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn m-1 relative"
+              onClick={() => fetchFriendRequests(userId)}
+            >
+              <BiBell size={22} />
+              {friendRequest && friendRequest.length > 0 && (
+                <div className="badge badge-primary absolute right-0 top-0">
+                  {friendRequest.length}
+                </div>
+              )}
+            </div>
             {friendRequest && friendRequest.length > 0 && (
-              <div className="badge badge-primary absolute right-0 top-0">
-                {friendRequest.length}
-              </div>
+              <ul
+                tabIndex={0}
+                className="dropdown-content menu bg-base-300 rounded-box z-[1] w-52 p-2 shadow"
+              >
+                {friendRequest.map((friendRequest: any) => {
+                  const { friends, user } = friendRequest;
+                  return (
+                    <li key={friends.userId} className="flex flex-col gap-1">
+                      <div className="flex px-3">
+                        <img
+                          src={user.image}
+                          height={32}
+                          width={32}
+                          className="rounded-full"
+                        />
+                        <span className="text-xs">
+                          {user.name} sent you a friend request
+                        </span>
+                      </div>
+                      <div className="w-full flex justify-end">
+                        <button
+                          className="btn btn-primary btn-xs"
+                          onClick={() => {
+                            acceptUser(friends.userId, userId);
+                          }}
+                        >
+                          Accept
+                        </button>
+                        <button
+                          className="btn btn-error btn-xs"
+                          onClick={() => {
+                            rejectUser(friends.userId);
+                          }}
+                        >
+                          Reject
+                        </button>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
             )}
           </div>
-          {friendRequest && friendRequest.length > 0 && (
+          <div className="dropdown dropdown-end">
+            <div tabIndex={0} role="button" className="btn m-1">
+              <BiMenu size={22} />
+            </div>
             <ul
               tabIndex={0}
-              className="dropdown-content menu bg-base-300 rounded-box z-[1] w-52 p-2 shadow"
+              className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
             >
-              {friendRequest.map((friendRequest: any) => {
-                const { friends, user } = friendRequest;
-                return (
-                  <li key={friends.userId} className="flex flex-col gap-1">
-                    <div className="flex px-3">
-                      <img
-                        src={user.image}
-                        height={32}
-                        width={32}
-                        className="rounded-full"
-                      />
-                      <span className="text-xs">
-                        {user.name} sent you a friend request
-                      </span>
-                    </div>
-                    <div className="w-full flex justify-end">
-                      <button
-                        className="btn btn-primary btn-xs"
-                        onClick={() => {
-                          acceptUser(friends.userId, userId);
-                        }}
-                      >
-                        Accept
-                      </button>
-                      <button
-                        className="btn btn-error btn-xs"
-                        onClick={() => {
-                          rejectUser(friends.userId);
-                        }}
-                      >
-                        Reject
-                      </button>
-                    </div>
-                  </li>
-                );
-              })}
+              <li>
+                <button
+                  type="submit"
+                  className="w-full btn btn-neutral"
+                  onClick={async () => {
+                    signOut({ callbackUrl: "/login" });
+                  }}
+                >
+                  Sign Out
+                </button>
+              </li>
             </ul>
-          )}
-        </div>
-        <div className="dropdown dropdown-end">
-          <div tabIndex={0} role="button" className="btn m-1">
-            <BiMenu size={22} />
           </div>
-          <ul
-            tabIndex={0}
-            className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
-          >
-            <li>
-              <button
-                type="submit"
-                className="w-full btn btn-neutral"
-                onClick={async () => {
-                  signOut({ callbackUrl: "/login" });
-                }}
-              >
-                Sign Out
-              </button>
-            </li>
-          </ul>
         </div>
-      </div>
+      ) : (
+        <div className="w-[5%]"></div>
+      )}
     </div>
   );
 };

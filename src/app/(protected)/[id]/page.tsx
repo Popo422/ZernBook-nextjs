@@ -11,7 +11,7 @@ import UserPost from "@/app/components/UserPost";
 import { useEffect, useState } from "react";
 
 const User = ({ params }: { params: { id: string } }) => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<[any]>([{}]);
   const [friends, setFriends] = useState<any>([]);
   const [currentMenu, setCurrentMenu] = useState<string>("posts");
   const { id } = params;
@@ -56,14 +56,14 @@ const User = ({ params }: { params: { id: string } }) => {
       <Header page="user" />
       <UserNav
         profile={""}
-        friendsNo = {friends.length || 0}
+        friendsNo={friends.length || 0}
         currentMenu={currentMenu}
         setCurrentMenu={setCurrentMenu}
       />
-      <div className="flex w-full pt-20 justify-center gap-20">
-        <div className="flex flex-col gap-5 ">
+      <div className="flex w-full pt-20 justify-center gap-20 pb-20">
+        <div className=" flex-col gap-5 hidden md:flex ">
           <Intro />
-          <UserPhotos />
+          <UserPhotos posts={posts} />
         </div>
         {currentMenu === "posts" && (
           <div className="flex flex-col gap-5 md:w-[500px] w-[300px]">
