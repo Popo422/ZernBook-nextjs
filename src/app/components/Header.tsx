@@ -1,13 +1,22 @@
 "use client";
 import { signOut, useSession } from "next-auth/react";
-import { BiArrowBack, BiBell, BiMenu, BiUser } from "react-icons/bi";
+import {
+  BiArrowBack,
+  BiBell,
+  BiMenu,
+  BiMoon,
+  BiSun,
+  BiUser,
+} from "react-icons/bi";
 import User from "./User";
 import { redirect, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { checkFriendRequests } from "../utils/friends/utils";
+import { ThemeContext } from "../context/ThemeContext";
 
 const Header = ({ page }: { page: string }) => {
   const session = useSession();
+  const { theme, setTheme } = useContext(ThemeContext);
   const { data: sessionData } = session;
   const router = useRouter();
   const [friendRequest, setFriendRequest] = useState<any>([]);
@@ -100,11 +109,15 @@ const Header = ({ page }: { page: string }) => {
         <span className="font-bold text-primary ">Zern</span>Book
       </h1>
       {session.status === "authenticated" ? (
-        <div className="flex gap-10">
-          <div className="dropdown dropdown-end">
-            <div
-              tabIndex={0}
-              role="button"
+        <div className="flex gap-5 items-center">
+          <button
+            className="btn btn-ghost"
+            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+          >
+            {theme === "light" ? <BiSun size={22} /> : <BiMoon size={22} />}
+          </button>
+          <div className="dropdown dropdown-end bg-base-100 ">
+            <button
               className="btn m-1 relative"
               onClick={() => fetchFriendRequests(userId)}
             >
@@ -114,7 +127,7 @@ const Header = ({ page }: { page: string }) => {
                   {friendRequest.length}
                 </div>
               )}
-            </div>
+            </button>
             {friendRequest && friendRequest.length > 0 && (
               <ul
                 tabIndex={0}
@@ -170,7 +183,7 @@ const Header = ({ page }: { page: string }) => {
               <li>
                 <button
                   type="submit"
-                  className="w-full btn btn-neutral"
+                  className="w-full btn btn-base-100 md:btn btn-xs"
                   onClick={async () => {
                     signOut({ callbackUrl: "/login" });
                   }}

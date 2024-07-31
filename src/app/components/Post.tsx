@@ -184,7 +184,7 @@ const Post = ({ post, fetchPosts }: { post: any; fetchPosts: any }) => {
         <h3 className="card-title">{posts?.title}</h3>
         <p>{posts?.content}</p>
         {posts?.image && (
-          <div className="flex justify-center p-2 border rounded-md border-dotted">
+          <div className="flex justify-center p-2 border rounded-md border-dotted bg-base-300">
             {imageLoading && <div className="skeleton h-32 w-full"></div>}
             <img
               src={posts?.image}
