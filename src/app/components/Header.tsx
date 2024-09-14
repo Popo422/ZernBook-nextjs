@@ -79,7 +79,7 @@ const Header = ({ page }: { page: string }) => {
   }, [session]);
 
   return (
-    <div className="w-full bg-base-100 flex justify-between p-4 items-center">
+    <div className="w-full bg-base-100 flex justify-between p-4 items-center gap-2">
       {sessionData ? (
         page !== "home" ? (
           <button className="btn " onClick={() => router.push("/home")}>
@@ -97,7 +97,7 @@ const Header = ({ page }: { page: string }) => {
       ) : (
         <button
           type="submit"
-          className=" btn btn-neutral"
+          className=" btn btn-neutral sm:btn-sm md:btn-md"
           onClick={() => {
             redirect("/login");
           }}
@@ -105,20 +105,20 @@ const Header = ({ page }: { page: string }) => {
           Sign In
         </button>
       )}
-      <h1 className="text-3xl">
+      <h1 className="md:text-3xl">
         <span className="font-bold text-primary ">Zern</span>Book
       </h1>
       {session.status === "authenticated" ? (
         <div className="flex gap-5 items-center">
           <button
-            className="btn btn-ghost"
+            className="btn btn-ghost sm:btn-sm md:btn-md"
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
           >
             {theme === "light" ? <BiSun size={22} /> : <BiMoon size={22} />}
           </button>
           <div className="dropdown dropdown-end bg-base-100 ">
             <button
-              className="btn m-1 relative"
+              className="btn m-1 relative sm:btn-sm md:btn-md"
               onClick={() => fetchFriendRequests(userId)}
             >
               <BiBell size={22} />
@@ -173,7 +173,7 @@ const Header = ({ page }: { page: string }) => {
             )}
           </div>
           <div className="dropdown dropdown-end">
-            <div tabIndex={0} role="button" className="btn m-1">
+            <div tabIndex={0} role="button" className="btn m-1 sm:btn-sm md:btn-md">
               <BiMenu size={22} />
             </div>
             <ul

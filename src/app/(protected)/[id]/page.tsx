@@ -76,13 +76,13 @@ const User = ({ params }: { params: { id: string } }) => {
         currentMenu={currentMenu}
         setCurrentMenu={setCurrentMenu}
       />
-      <div className="flex w-full pt-20 justify-center gap-20 pb-20">
+      <div className="flex w-full py-20 justify-center gap-20 pb-20 h-full">
         <div className=" flex-col gap-5 hidden md:flex ">
           <Intro />
           <UserPhotos posts={posts} />
         </div>
         {currentMenu === "posts" && (
-          <div className="flex flex-col gap-5 md:w-[500px] w-[300px]">
+          <div className="flex flex-col gap-5 md:w-[500px] w-[300px] h-full">
             <UserPost fetchPosts={fetchUserPosts} />
             <ul className="flex flex-col gap-5">
               {posts &&
@@ -97,7 +97,7 @@ const User = ({ params }: { params: { id: string } }) => {
           </div>
         )}
         {currentMenu === "friends" && (
-          <div className="flex flex-col gap-5 md:w-[500px] w-[300px]">
+          <div className="flex flex-col gap-5 md:w-[500px] w-[300px] h-full">
             <FriendsWidget userFriends={friends} />
           </div>
         )}
